@@ -1,0 +1,27 @@
+// AUTH REDUCER
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const ACCESS_TOKEN_ERROR = "ACCESS_TOKEN_ERROR";
+export const ACCESS_TOKEN_SUCCESS = "ACCESS_TOKEN_SUCCESS";
+export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";            // Added for signup success
+export const SIGNUP_FAIL = "SIGNUP_FAIL";                  // Added for signup failure
+export const LOGIN_FAIL = "LOGIN_FAIL";
+export const LOGOUT_FAIL = "LOGOUT_FAIL";
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
+export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
+
+// PROFILE REDUCER
+export const AUTH_USER_LOAD = "AUTH_USER_LOAD";
+export const AUTH_USER_LOAD_ERROR = "AUTH_USER_LOAD_ERROR";
+export const PROFILE_UPDATE = "PROFILE_UPDATE";
+export const PROFILE_UPDATE_ERROR = "PROFILE_UPDATE_ERROR";
+
+// TILE REDUCER
+export const GET_TILE_LIST = "GET_TILE_LIST";
+export const GET_TILE_DETAILS = "GET_TILE_DETAILS";
+export const GET_TILE_DETAILS_ERROR = "GET_TILE_DETAILS_ERROR";
+export const CREATE_TILE = "CREATE_TILE";
+export const CREATE_TILE_ERROR = "CREATE_TILE_ERROR";
+export const UPDATE_TILE = "UPDATE_TILE";
+export const UPDATE_TILE_ERROR = "UPDATE_TILE_ERROR";
+export const DELETE_TILE = "DELETE_TILE";
+export const DELETE_TILE_ERROR = "DELETE_TILE_ERROR";
