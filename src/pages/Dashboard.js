@@ -18,18 +18,13 @@ const Dashboard = () => {
       }
 
       const data = await response.json();
-      setTiles(data.tiles.items); // Assuming the API response structure includes items directly
+      const tiles = data.tiles.items;
 
-      // Convert the tiles data to JSON and trigger a download
-      const blob = new Blob([JSON.stringify({ tiles: data.tiles.items }, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
+      // Store the tile data in local storage
+      localStorage.setItem('tiles', JSON.stringify(tiles));
 
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tiles.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      // Update state with fetched tiles
+      setTiles(tiles);
 
     } catch (err) {
       console.error(`Failed to fetch tiles: ${err.message}`);
@@ -37,7 +32,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchTileList();
+    // Check if tiles are already in localStorage
+    const storedTiles = localStorage.getItem('tiles');
+    if (storedTiles) {
+      // Parse and set the tiles from localStorage
+      setTiles(JSON.parse(storedTiles));
+    } else {
+      // Fetch the tiles if not present in localStorage
+      fetchTileList();
+    }
   }, []);
 
   return (

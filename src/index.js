@@ -21,7 +21,7 @@ const Room1 = React.lazy(() => import("./pages/room1"));
 const Hall = React.lazy(() => import("./pages/hall"));
 // const Login = React.lazy(() => import("./views/LoginPage/LoginPage"));
 // const Signup = React.lazy(() => import("./views/SignupPage/SignupPage"));
-const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+// const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 
 function App() {
   return (
@@ -43,10 +43,12 @@ function App() {
           <Suspense fallback={null}>
             {/* <Route path='/login' render={(props) => <Login {...props} />} /> */}
             {/* <Route path='/signup' render={(props) => <Signup {...props} />} /> */}
-            <Route path='/' render={(props) => <Dashboard {...props} />} />
+            {/* <Route path='/' render={(props) => <Dashboard {...props} />} /> */}
             <Route path='/room-1' render={(props) => <Room1 {...props} />} />
             <Route path='/hall' render={(props) => <Hall {...props} />} />
-            
+            <Route exact path='/'>
+              <Redirect to='/hall' />
+            </Route>
           </Suspense>
         </Switch>
       </Router>

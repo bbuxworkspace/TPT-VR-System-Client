@@ -96,7 +96,7 @@ export default function Model() {
 
     loader.load(
       // resource URL
-      "/Hall_v11.gltf",
+      "/Hall_v12.gltf",
       // called when the resource is loaded
       function (gltf) {
         setModel(gltf.scene);

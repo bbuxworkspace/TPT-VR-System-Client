@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   NavbarWrapper,
   NavbarIcon,
@@ -7,7 +7,6 @@ import {
   LanguageButton,
   Contacts,
 } from "./style";
-import Map from "../Map";
 import { withTheme } from "styled-components";
 import {
   Accordion,
@@ -17,53 +16,53 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import "react-accessible-accordion/dist/fancy-example.css";
-import HomeInfo from "./HomeInfo";
 import TextureSelection from "./TextureSelection";
 import { useModel } from "../../../state/Store";
-import { doorData, floorData, wallData } from "./data";
 import Button from "../Button";
-import { useTranslation } from "react-i18next";
 import { useHistory } from 'react-router-dom';
-
-
-const accordionList = [
-  {
-    id: 1,
-    title: "flooring",
-    type: "Floor",
-    isDoorSelection: false,
-    data: floorData,
-  },
-  // {
-  //   id: 2,
-  //   title: "wallPaint",
-  //   type: "Wall",
-  //   isDoorSelection: false,
-  //   data: wallData,
-  // },
-  // {
-  //   id: 3,
-  //   title: "doors",
-  //   type: "Door",
-  //   isDoorSelection: true,
-  //   data: doorData,
-  // },
-];
+import { doorData, floorData as floorData2, wallData } from "./data";
 
 const Navbar = ({ active, theme }) => {
   let nav = React.useRef();
   let navIcon = React.useRef();
-  const { t, i18n } = useTranslation();
-  const isEnglish = i18n.language === "en" ? true : false;
 
   const history = useHistory();
 
+  console.log("Navbar", floorData2);
+
   const [toggleFurniture, setToggleFurniture] = useState(false);
   const [toggleRoom, setToggleRoom] = useState(true);
+  const [floorData, setFloorData] = useState([]);
 
   const { model, scene, setActiveFloor, lightMaps } = useModel(
     (state) => state
   );
+
+  // Retrieve floor data from localStorage and filter it
+  useEffect(() => {
+    const storedTiles = localStorage.getItem('tiles');    
+    if (storedTiles) {
+      const parsedTiles = JSON.parse(storedTiles).map((tile, index) => ({
+        id: index + 1,
+        name: tile.name,
+        textureImg: `/assets/floors/${tile.image}`, // Adding /assets prefix to textureImg
+      }));
+      setFloorData(parsedTiles);
+      console.log("Navbar", "Server tiles loaded");
+    } 
+
+    else {
+      setFloorData(floorData2);
+      console.log("Navbar", "Offline tiles loaded");
+    }
+      
+
+  }, []);
+
+
+  console.log("Navbar", floorData);
+
+
 
   function handleOpen() {
     if (nav.current.classList.contains("show-nav")) {
@@ -119,20 +118,34 @@ const Navbar = ({ active, theme }) => {
     }
   }
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
   const changeRoom = (page) => {
     history.push(page); // Navigate to the specific page
-
-    if(toggleRoom){
-      setToggleRoom(false);
-    }
-    else{
-      setToggleRoom(true);
-    }
+    setToggleRoom(!toggleRoom);
   };
+
+  const accordionList = [
+    {
+      id: 1,
+      title: "Flooring",
+      type: "Floor",
+      isDoorSelection: false,
+      data: floorData,  // Use the floorData state here
+    },
+    {
+      id: 2,
+      title: "Wall Paint",
+      type: "Wall",
+      isDoorSelection: false,
+      data: wallData,
+    },
+    {
+      id: 3,
+      title: "Doors",
+      type: "Door",
+      isDoorSelection: true,
+      data: doorData,
+    },
+  ];
 
   return (
     <NavbarWrapper ref={nav}>
@@ -151,7 +164,7 @@ const Navbar = ({ active, theme }) => {
             alt=''
           />
         </div>
-        <div className='title'>{t("subtitle")}</div>
+        <div className='title'>{"TPT VR System"}</div>
         <div
           style={{
             padding: "12px 24px",
@@ -166,38 +179,16 @@ const Navbar = ({ active, theme }) => {
         <LanguageButton onClick={() => changeRoom('/room-1')} active={toggleRoom}>
           Room
         </LanguageButton>
-        {/* <LanguageButton onClick={() => changeLanguage('en', '/hall')} active={isEnglish}>
-          English
-        </LanguageButton>
-        <LanguageButton onClick={() => changeLanguage('en2', '/room-1')} active={!isEnglish}>
-          Irish
-        </LanguageButton> */}
+     
         </div>
-        {/* <Map /> */}
-        {/* <HomeInfo /> */}
-
-        {/* <div
-          style={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "center",
-            margin: "20px 0",
-          }}
-        >
-          <Button onClick={handleDisableFurniture}>
-            {toggleFurniture
-              ? t("enableFurnitureBtn")
-              : t("disableFurnitureBtn")}
-          </Button>
-        </div> */}
-
+        
         <AccordionWrapper>
           <Accordion allowZeroExpanded preExpanded={[1]}>
             {accordionList.map((item) => (
               <AccordionItem key={item.id} uuid={item.id}>
                 <AccordionItemHeading>
                   <AccordionItemButton>
-                    {t("accordion:" + item.title)}
+                    {item.title}
                   </AccordionItemButton>
                 </AccordionItemHeading>
                 <AccordionItemPanel>
@@ -212,10 +203,10 @@ const Navbar = ({ active, theme }) => {
           </Accordion>
         </AccordionWrapper>
         <Contacts>
-          <h2>{t("contactsTitle")}</h2>
+          <h2>{"Contact Us"}</h2>
           <a className='contact-item' href='mailto:mailbox@bytebux.ie'>
             <img src='/assets/images/email.svg' alt='' />
-            <span>bytebux@bytebux.ie</span>
+            <span>mailbox@bytebux.ie</span>
           </a>
           <a className='contact-item' href='tel:+123456789'>
             <img src='/assets/images/call.svg' alt='' />
@@ -231,7 +222,7 @@ const Navbar = ({ active, theme }) => {
           }}
         >
           <p> TPT VR System v1.0</p>
-          <p> {t("copyright")}</p>
+          <p> {"All rights reserved."}</p>
           <p> 2024 © ByteBux</p>
         </div>
       </NavbarContent>
